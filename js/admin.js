@@ -1,6 +1,5 @@
 /* ============================================================
-   АДМИНКА — вход, товары, фото, настройки
-   Требует заполненных SUPABASE_URL и SUPABASE_ANON_KEY в config.js
+   АДМИНКА — вход, товары, фото, настройки (ПОЛНАЯ ВЕРСИЯ)
 ============================================================ */
 
 const $  = (s, r = document) => r.querySelector(s);
@@ -15,7 +14,7 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
 
 let TOKEN = sessionStorage.getItem("vb_token") || "";
 
-/* ---------- запросы к Supabase (чистый fetch, без библиотек) ---------- */
+/* ---------- запросы к Supabase ---------- */
 async function auth(email, password) {
   const r = await fetch(SUPABASE_URL + "/auth/v1/token?grant_type=password", {
     method: "POST",
@@ -31,12 +30,7 @@ async function auth(email, password) {
 async function api(method, path, body) {
   const opt = {
     method,
-    headers: { 
-      apikey: SUPABASE_ANON_KEY, 
-      Authorization: "Bearer " + TOKEN, 
-      "Content-Type": "application/json", 
-      Prefer: "return=representation" 
-    }
+    headers: { apikey: SUPABASE_ANON_KEY, Authorization: "Bearer " + TOKEN, "Content-Type": "application/json", Prefer: "return=representation" }
   };
   if (body !== undefined) opt.body = JSON.stringify(body);
   const r = await fetch(SUPABASE_URL + "/rest/v1/" + path, opt);
@@ -49,12 +43,7 @@ async function uploadPhoto(file) {
   const path = `${Date.now()}_${Math.random().toString(36).slice(2, 8)}.${ext}`;
   const r = await fetch(`${SUPABASE_URL}/storage/v1/object/products/${path}`, {
     method: "POST",
-    headers: { 
-      apikey: SUPABASE_ANON_KEY, 
-      Authorization: "Bearer " + TOKEN, 
-      "Content-Type": file.type, 
-      "x-upsert": "true" 
-    },
+    headers: { apikey: SUPABASE_ANON_KEY, Authorization: "Bearer " + TOKEN, "Content-Type": file.type, "x-upsert": "true" },
     body: file
   });
   if (!r.ok) throw new Error("Ошибка загрузки фото: " + r.status);
@@ -68,16 +57,10 @@ $("#loginForm").addEventListener("submit", async e => {
   try {
     await auth($("#lEmail").value.trim(), $("#lPass").value);
     showPanel();
-  } catch (err) { 
-    $("#loginErr").textContent = err.message; 
-  }
+  } catch (err) { $("#loginErr").textContent = err.message; }
 });
 
-$("#logoutBtn").onclick = () => { 
-  TOKEN = ""; 
-  sessionStorage.removeItem("vb_token"); 
-  location.reload(); 
-};
+$("#logoutBtn").onclick = () => { TOKEN = ""; sessionStorage.removeItem("vb_token"); location.reload(); };
 
 function showPanel() {
   $("#authView").hidden = true;
@@ -119,49 +102,31 @@ async function loadProducts() {
           <button class="mini del" data-del="${p.id}">Удал.</button>
         </div></td>
       </tr>`).join("") || `<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:24px">Товаров пока нет — добавь первый выше.</td></tr>`;
-    
     $$("[data-edit]").forEach(b => b.onclick = () => editProduct(rows.find(p => p.id === b.dataset.edit)));
     $$("[data-del]").forEach(b => b.onclick = () => delProduct(b.dataset.del));
-  } catch (e) { 
-    alert("Ошибка загрузки: " + e.message); 
-  }
+  } catch (e) { alert("Ошибка загрузки: " + e.message); }
 }
 
-function escapeHtml(s){
-  return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 
 /* ---------- товары: форма ---------- */
 let editingId = null;
 let currentImage = "";
 
 function resetForm() {
-  editingId = null; 
-  currentImage = "";
-  $("#pId").value = ""; 
-  $("#pTitle").value = ""; 
-  $("#pDesc").value = "";
-  $("#pPrice").value = ""; 
-  $("#pUnit").value = "kg"; 
-  $("#pCat").value = "cakes";
-  $("#pActive").checked = true; 
-  $("#pSort").value = 100; 
-  $("#pPhotos").value = "";
-  $("#photosPreview").innerHTML = ""; 
-  $("#productMsg").textContent = "";
+  editingId = null; currentImage = "";
+  $("#pId").value = ""; $("#pTitle").value = ""; $("#pDesc").value = "";
+  $("#pPrice").value = ""; $("#pUnit").value = "kg"; $("#pCat").value = "cakes";
+  $("#pActive").checked = true; $("#pSort").value = 100; $("#pPhotos").value = "";
+  $("#photosPreview").innerHTML = ""; $("#productMsg").textContent = "";
 }
 $("#resetProduct").onclick = resetForm;
 
 function editProduct(p) {
-  editingId = p.id; 
-  currentImage = p.image || "";
-  $("#pTitle").value = p.title; 
-  $("#pDesc").value = p.description || "";
-  $("#pPrice").value = p.price; 
-  $("#pUnit").value = p.unit; 
-  $("#pCat").value = p.category;
-  $("#pActive").checked = p.is_active; 
-  $("#pSort").value = p.sort;
+  editingId = p.id; currentImage = p.image || "";
+  $("#pTitle").value = p.title; $("#pDesc").value = p.description || "";
+  $("#pPrice").value = p.price; $("#pUnit").value = p.unit; $("#pCat").value = p.category;
+  $("#pActive").checked = p.is_active; $("#pSort").value = p.sort;
   $("#photosPreview").innerHTML = currentImage ? `<img src="${currentImage}" alt="">` : "";
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
@@ -191,23 +156,16 @@ $("#productForm").addEventListener("submit", async e => {
     };
     if (editingId) await api("PATCH", "products?id=eq." + editingId, payload);
     else           await api("POST", "products", payload);
-    
     $("#productMsg").textContent = "✅ Сохранено";
     resetForm();
     loadProducts();
-  } catch (err) { 
-    $("#productMsg").textContent = "❌ " + err.message; 
-  }
+  } catch (err) { $("#productMsg").textContent = "❌ " + err.message; }
 });
 
 async function delProduct(id) {
   if (!confirm("Удалить эту карточку?")) return;
-  try { 
-    await api("DELETE", "products?id=eq." + id); 
-    loadProducts(); 
-  } catch (e) { 
-    alert("Ошибка: " + e.message); 
-  }
+  try { await api("DELETE", "products?id=eq." + id); loadProducts(); }
+  catch (e) { alert("Ошибка: " + e.message); }
 }
 
 /* ---------- настройки ---------- */
@@ -218,9 +176,7 @@ async function loadSettings() {
     $("#sPickup").value = map.pickup_address || "";
     $("#sLead").value = map.lead_days || 4;
     $("#sTg").value = map.telegram || "";
-  } catch (e) { 
-    console.warn(e); 
-  }
+  } catch (e) { console.warn(e); }
 }
 
 $("#settingsForm").addEventListener("submit", async e => {
