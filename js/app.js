@@ -226,4 +226,27 @@ ${deliveryLine}
   renderCart();
   initCalc();
   initOrder();
+/* ---------- SCROLL REVEAL: плавное появление секций ---------- */
+(function setupReveal(){
+  const targets = document.querySelectorAll(".section, .custom-banner, .hero, .footer");
+  targets.forEach(el => el.classList.add("reveal"));
+  // карточки и инфо-блоки тоже помечаем
+  setTimeout(() => {
+    document.querySelectorAll(".grid .card, .cards3 .info-card").forEach(el => el.classList.add("reveal"));
+    observeAll();
+  }, 50);
+
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in-view"); io.unobserve(e.target); } });
+  }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
+
+  function observeAll(){ document.querySelectorAll(".reveal:not(.in-view)").forEach(el => io.observe(el)); }
+  observeAll();
+
+  // переснимаем при рендере каталога (новые карточки)
+  const origRenderCatalog = window.renderCatalog;
+  if (origRenderCatalog) {
+    window.renderCatalog = function(){ origRenderCatalog(); setTimeout(observeAll, 30); };
+  }
+})();
 })();
