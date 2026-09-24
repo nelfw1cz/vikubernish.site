@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Админка · Viku Bernish</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  body{background:var(--soft)}
+  .auth,.panel{max-width:980px;margin:40px auto;background:#fff;border:1px solid var(--line);
+    border-radius:var(--radius);padding:34px;box-shadow:var(--shadow)}
+  .auth{max-width:420px}
+  .auth h2,.panel h2{font-family:'Playfair Display',serif;color:var(--choco);margin-bottom:6px}
+  .auth .field,.panel .field{margin-bottom:14px}
+  .err{color:#b3402f;font-size:14px;margin-top:8px;min-height:18px}
+  .ok{color:#3a7d44;font-size:14px;margin-top:8px;min-height:18px}
+  .panel-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px}
+  .tabs-admin{display:flex;gap:8px;margin-bottom:22px}
+  .tab-a{padding:9px 18px;border-radius:999px;border:1.5px solid var(--line);background:#fff;
+    font-weight:600;cursor:pointer;color:var(--muted)}
+  .tab-a.active{background:var(--choco);color:#fff;border-color:var(--choco)}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th,td{text-align:left;padding:11px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+  th{color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px}
+  td img{width:46px;height:46px;object-fit:cover;border-radius:10px}
+  .ph{width:46px;height:46px;border-radius:10px;background:var(--soft);display:flex;align-items:center;justify-content:center;font-size:22px}
+  .row-btns{display:flex;gap:6px}
+  .mini{padding:6px 12px;border-radius:8px;border:1px solid var(--line);background:#fff;cursor:pointer;font-size:13px;font-weight:600}
+  .mini.del{color:#b3402f;border-color:#f0d3cd}
+  .mini:hover{border-color:var(--caramel)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .photos-preview{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  .photos-preview img{width:70px;height:70px;object-fit:cover;border-radius:10px;border:1px solid var(--line)}
+  .switch{display:flex;align-items:center;gap:8px;font-size:14px}
+  .hint{font-size:12px;color:var(--muted);margin-top:4px}
+  @media(max-width:640px){.grid2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- ВХОД -->
+<section class="auth" id="authView">
+  <h2>Вход в админку</h2>
+  <p style="color:var(--muted);margin-bottom:18px">Только для владельца.</p>
+  <form id="loginForm">
+    <label class="field"><span>Email</span><input type="email" id="lEmail" required></label>
+    <label class="field"><span>Пароль</span><input type="password" id="lPass" required></label>
+    <button class="btn btn--blue" style="width:100%" type="submit">Войти</button>
+    <div class="err" id="loginErr"></div>
+  </form>
+</section>
+
+<!-- ПАНЕЛЬ -->
+<section class="panel" id="panelView" hidden>
+  <div class="panel-head">
+    <h2>Панель управления</h2>
+    <button class="mini" id="logoutBtn">Выйти</button>
+  </div>
+
+  <div class="tabs-admin">
+    <button class="tab-a active" data-tab="products">Товары</button>
+    <button class="tab-a" data-tab="settings">Настройки</button>
+  </div>
+
+  <!-- ТОВАРЫ -->
+  <div id="tab-products">
+    <h3 style="margin-bottom:14px;color:var(--choco)">Карточка товара</h3>
+    <form id="productForm">
+      <input type="hidden" id="pId">
+      <div class="grid2">
+        <label class="field"><span>Название</span><input type="text" id="pTitle" required placeholder="Торт «Красный бархат»"></label>
+        <label class="field"><span>Категория</span>
+          <select id="pCat"></select>
+        </label>
+      </div>
+      <label class="field"><span>Описание</span>
+        <textarea id="pDesc" rows="3" style="padding:12px 14px;border:1.5px solid var(--line);border-radius:12px;font-family:inherit;font-size:15px;background:var(--cream)" placeholder="Коротко о вкусе и составе"></textarea>
+      </label>
+      <div class="grid2">
+        <label class="field"><span>Цена (₽)</span><input type="number" id="pPrice" min="0" required placeholder="2500"></label>
+        <label class="field"><span>Единица</span>
+          <select id="pUnit"><option value="kg">за кг</option><option value="pc">за шт</option><option value="set">за набор</option></select>
+        </label>
+      </div>
+      <label class="field"><span>Фото (можно несколько, первое — обложка)</span>
+        <input type="file" id="pPhotos" accept="image/*" multiple>
+        <div class="photos-preview" id="photosPreview"></div>
+      </label>
+      <div class="grid2">
+        <label class="switch"><input type="checkbox" id="pActive" checked> Показывать на сайте</label>
+        <label class="field"><span>Порядок (меньше = выше)</span><input type="number" id="pSort" value="100"></label>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:8px">
+        <button class="btn btn--blue" type="submit">Сохранить карточку</button>
+        <button class="btn btn--ghost" type="button" id="resetProduct">Очистить форму</button>
+      </div>
+      <div class="ok" id="productMsg"></div>
+    </form>
+
+    <h3 style="margin:30px 0 14px;color:var(--choco)">Все товары</h3>
+    <table>
+      <thead><tr><th></th><th>Название</th><th>Категория</th><th>Цена</th><th>Активен</th><th></th></tr></thead>
+      <tbody id="productsTable"></tbody>
+    </table>
+  </div>
+
+  <!-- НАСТРОЙКИ -->
+  <div id="tab-settings" hidden>
+    <form id="settingsForm">
+      <label class="field"><span>Адрес самовывоза</span><input type="text" id="sPickup" placeholder="Екатеринбург, ул. …"></label>
+      <label class="field"><span>Срок изготовления (дней)</span><input type="number" id="sLead" min="1" value="4"></label>
+      <label class="field"><span>Ссылка Telegram</span><input type="text" id="sTg" placeholder="https://t.me/feeIscared"></label>
+      <button class="btn btn--blue" type="submit">Сохранить настройки</button>
+      <div class="ok" id="settingsMsg"></div>
+    </form>
+  </div>
+</section>
+
+<script src="js/config.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>

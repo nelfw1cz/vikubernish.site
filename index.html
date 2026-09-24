@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Viku Bernish — кондитерская мастерская · Екатеринбург</title>
+<meta name="description" content="Торты и десерты на заказ в Екатеринбурге и области. Индивидуальный дизайн, натуральные ингредиенты.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ===== ШАПКА ===== -->
+<header class="header">
+  <div class="container header__inner">
+    <a href="#top" class="logo">
+      <span class="logo__name">Viku Bernish</span>
+      <span class="logo__sub">кондитерская мастерская</span>
+    </a>
+    <nav class="nav">
+      <a href="#catalog">Каталог</a>
+      <a href="#calc">Калькулятор</a>
+      <a href="#delivery">Доставка</a>
+      <a href="#reviews">Отзывы</a>
+    </nav>
+    <button class="cart-btn" id="openCart" aria-label="Корзина">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M2 3h2l2.4 12.4a1 1 0 0 0 1 .8h9.7a1 1 0 0 0 1-.8L21 7H5.2"/></svg>
+      <span class="cart-btn__count" id="cartCount">0</span>
+    </button>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <div class="container hero__inner">
+      <span class="chip">Заказы принимаем за 4 дня и более</span>
+      <h1>Торты и десерты,<br>сделанные с любовью</h1>
+      <p class="hero__lead">Авторские торты, тарты и пирожные на заказ в Екатеринбурге и области. Натуральные ингредиенты, индивидуальный дизайн под ваш повод.</p>
+      <div class="hero__cta">
+        <a href="#catalog" class="btn btn--caramel">Смотреть каталог</a>
+        <a href="#calc" class="btn btn--ghost">Рассчитать стоимость</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== БАННЕР: ДЕЛАЕМ НА ЗАКАЗ ===== -->
+  <section class="container">
+    <div class="custom-banner">
+      <div>
+        <h3>Не нашли идеальный десерт?</h3>
+        <p>Приготовим по вашей идее — от эскиза до фото в чате. Свадьбы, дни рождения, корпоративы и просто «хочу красивое».</p>
+      </div>
+      <a href="#calc" class="btn btn--blue">Обсудить заказ</a>
+    </div>
+  </section>
+
+  <!-- ===== КАТАЛОГ ===== -->
+  <section class="section" id="catalog">
+    <div class="container">
+      <h2 class="section__title">Каталог</h2>
+      <div class="tabs" id="tabs"></div>
+      <div class="grid" id="catalog"></div>
+    </div>
+  </section>
+
+  <!-- ===== КАЛЬКУЛЯТОР ===== -->
+  <section class="section section--soft" id="calc">
+    <div class="container calc">
+      <div>
+        <h2 class="section__title">Калькулятор стоимости</h2>
+        <p class="section__lead">Ориентировочная цена «от». Точную стоимость подтвердим в чате после уточнения деталей.</p>
+      </div>
+      <form class="calc__form" id="calcForm">
+        <label class="field">
+          <span>Что считаем</span>
+          <select id="calcCategory"></select>
+        </label>
+        <label class="field">
+          <span id="calcQtyLabel">Количество</span>
+          <input type="number" id="calcQty" min="1" step="0.5" value="1">
+        </label>
+        <fieldset class="calc__options" id="calcOptions">
+          <legend>Дополнительно</legend>
+        </fieldset>
+        <div class="calc__result">
+          <span>Примерная стоимость</span>
+          <strong id="calcPrice">—</strong>
+        </div>
+        <button type="button" class="btn btn--blue" id="calcAdd">Добавить к заказу</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ===== ДОСТАВКА ===== -->
+  <section class="section" id="delivery">
+    <div class="container">
+      <h2 class="section__title">Доставка и самовывоз</h2>
+      <div class="cards3">
+        <div class="info-card">
+          <h3>🚗 Доставка</h3>
+          <p>По Екатеринбургу и области. Стоимость и время согласуем при подтверждении заказа — бережно, в термо-упаковке.</p>
+        </div>
+        <div class="info-card">
+          <h3>🏠 Самовывоз</h3>
+          <p id="pickupAddress">Адрес уточняется.</p>
+        </div>
+        <div class="info-card">
+          <h3>⏳ Срок изготовления</h3>
+          <p>Заказы принимаем <b>за 4 дня и более</b> до желаемой даты — так каждый десерт получается идеальным.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ОТЗЫВЫ (заглушка) ===== -->
+  <section class="section section--soft" id="reviews">
+    <div class="container reviews">
+      <h2 class="section__title">Отзывы</h2>
+      <div class="reviews__placeholder">
+        <span class="reviews__emoji">💌</span>
+        <p>Отзывы появятся чуть позже — собираем честный раздел без накруток. Пока что пишите впечатления в Telegram, будем рады!</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ===== ПОДВАЛ ===== -->
+<footer class="footer">
+  <div class="container footer__inner">
+    <div class="logo logo--light">
+      <span class="logo__name">Viku Bernish</span>
+      <span class="logo__sub">кондитерская мастерская</span>
+    </div>
+    <p>Екатеринбург и область · заказы в Telegram</p>
+    <a class="btn btn--blue" id="footerTg" href="https://t.me/feeIscared" target="_blank" rel="noopener">Написать в Telegram</a>
+    <small>© <span id="year"></span> Viku Bernish. Сделано с любовью.</small>
+  </div>
+</footer>
+
+<!-- ===== КОРЗИНА-ШТОРКА ===== -->
+<aside class="cart" id="cart" aria-hidden="true">
+  <div class="cart__overlay" id="cartOverlay"></div>
+  <div class="cart__panel">
+    <div class="cart__head">
+      <h3>Ваш заказ</h3>
+      <button class="cart__close" id="closeCart" aria-label="Закрыть">✕</button>
+    </div>
+
+    <div class="cart__items" id="cartItems"></div>
+
+    <form class="order-form" id="orderForm">
+      <label class="field"><span>Ваше имя</span><input type="text" id="oName" required placeholder="Как к вам обращаться"></label>
+      <label class="field"><span>Контакт (Telegram или телефон)</span><input type="text" id="oContact" required placeholder="@username или +7…"></label>
+
+      <fieldset class="radio-row">
+        <legend>Как получить</legend>
+        <label><input type="radio" name="delivery" value="delivery" checked> Доставка</label>
+        <label><input type="radio" name="delivery" value="pickup"> Самовывоз</label>
+      </fieldset>
+      <label class="field" id="addrField"><span>Адрес доставки</span><input type="text" id="oAddress" placeholder="Екатеринбург, улица, дом"></label>
+
+      <label class="field"><span>Желаемая дата</span><input type="date" id="oDate" required></label>
+
+      <div class="order-form__actions">
+        <button type="button" class="btn btn--blue" id="generateOrder">Сформировать заказ</button>
+      </div>
+
+      <div class="order-result" id="orderResult" hidden>
+        <textarea id="orderText" readonly></textarea>
+        <div class="order-result__btns">
+          <button type="button" class="btn btn--ghost" id="copyOrder">📋 Скопировать</button>
+          <a class="btn btn--blue" id="tgOrder" href="https://t.me/feeIscared" target="_blank" rel="noopener">✈️ Открыть Telegram</a>
+        </div>
+        <p class="order-result__hint">Скопируйте текст и отправьте его в открывшемся Telegram.</p>
+      </div>
+    </form>
+  </div>
+</aside>
+
+<script src="js/config.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
